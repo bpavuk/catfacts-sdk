@@ -16,14 +16,29 @@ val ktor_version = "2.3.2"
 kotlin {
     jvm {
         jvmToolchain(8)
+        testRuns["test"].executionTask.configure {
+            useJUnitPlatform()
+        }
     }
     linuxX64()
     iosArm64()
     iosX64()
     iosSimulatorArm64()
     js(IR) {
-        browser()
-        nodejs()
+        browser {
+            testTask(Action {
+                useKarma {
+                    useFirefox()
+                }
+            })
+        }
+        nodejs {
+            testTask(Action {
+                useMocha {
+                    timeout = "20s"
+                }
+            })
+        }
     }
     explicitApi()
 
@@ -34,9 +49,16 @@ kotlin {
                 implementation("io.ktor:ktor-client-core:$ktor_version") // ядро, core
                 implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")  // плагін ContentNegotiation
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktor_version")  // Serialization API
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.2")
             }
         }
-        val commonTest by getting
+        val commonTest by getting {
+            dependencies {
+                implementation(kotlin("test"))
+                implementation(kotlin("test-annotations-common"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.2")
+            }
+        }
 
         val linuxX64Main by getting {
             dependencies {
