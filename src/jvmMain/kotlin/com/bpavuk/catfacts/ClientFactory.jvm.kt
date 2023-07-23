@@ -9,7 +9,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-internal actual fun getClient(): HttpClient = HttpClient(CIO) {
+internal actual fun getClient(baseUrl: Url): HttpClient = HttpClient(CIO) {
     install(ContentNegotiation) {  // серіалізація
         json(
             Json {
@@ -22,9 +22,6 @@ internal actual fun getClient(): HttpClient = HttpClient(CIO) {
         agent = "My cool secret user agent"
     }
     install(DefaultRequest) {  // запити за замовчуванням
-        url {
-            host = "catfact.ninja"
-            protocol = URLProtocol.HTTPS
-        }
+        url(baseUrl.toString())
     }
 }
