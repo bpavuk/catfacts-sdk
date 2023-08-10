@@ -1,8 +1,11 @@
 package com.bpavuk.catfacts.config
 
-import io.ktor.http.*
+import kotlin.js.ExperimentalJsExport
+import kotlin.js.JsExport
 
+@OptIn(ExperimentalJsExport::class)
+@JsExport
 public class CatFactsConfig {
     public var defaultFactLength: Int? = null
-    public var baseUrl: Url = Url("https://catfact.ninja")
+    public var baseUrl: String = "https://catfact.ninja"
 }

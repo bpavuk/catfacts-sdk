@@ -3,10 +3,15 @@ package com.bpavuk.catfacts
 import com.bpavuk.catfacts.config.CatFactsConfig
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.http.*
 
-public class CatFacts(config: CatFactsConfig.() -> Unit = {}) {
-    private val client = getClient()
-    private val config = CatFactsConfig().apply(config)
+public class CatFacts(configLambda: CatFactsConfig.() -> Unit = {}) {
+    private var config = CatFactsConfig().apply(configLambda)
+    private val client = getClient(Url(config.baseUrl))
+
+    public constructor(config: CatFactsConfig) : this() {
+        this.config = config
+    }
 
     /**
      * Returns cat fact
