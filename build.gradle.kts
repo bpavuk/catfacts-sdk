@@ -2,10 +2,11 @@ plugins {
     kotlin("multiplatform") version "1.9.0"
     kotlin("plugin.serialization") version "1.9.0"
     id("org.gradle.maven-publish")
+    id("dev.petuska.npm.publish") version "3.4.1"
 }
 
 group = "com.bpavuk"
-version = "1.4-SNAPSHOT"
+version = "1.5.3"
 
 repositories {
     mavenCentral()
@@ -25,6 +26,7 @@ kotlin {
     iosX64()
     iosSimulatorArm64()
     js(IR) {
+        moduleName = "catfactsSdk"
         browser {
             testTask(Action {
                 useKarma {
@@ -39,6 +41,8 @@ kotlin {
                 }
             })
         }
+        useCommonJs()
+        binaries.library()
     }
     explicitApi()
 
@@ -109,6 +113,15 @@ publishing {
     repositories {
         maven {
 
+        }
+    }
+}
+
+npmPublish {
+    registries {
+        register("npmjs") {
+            uri.set("https://registry.npmjs.org")
+            authToken.set(System.getenv("node_token"))
         }
     }
 }
